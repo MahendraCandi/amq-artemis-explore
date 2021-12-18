@@ -5,7 +5,7 @@
 2. Go to /bin directory then Open CMD/terminal
 3. Create the messaging broker using command:
 
-    `artemis create <your-broker-name> --name mybroker --user <username> --password <password>`
+    `artemis create --name <your-broker-name> --user <username> --password <password>`
    
 4. Go to `<your-broker-name>`
 5. Create address:
