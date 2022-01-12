@@ -3,8 +3,11 @@ package com.mahendracandi.amqartemisexplorer.controller;
 import com.mahendracandi.amqartemisexplorer.jms.JMSSending;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
 
 @RestController
 public class AppController {
@@ -19,6 +22,12 @@ public class AppController {
         for (int i = 0; i < count; i++) {
             jmsSending.send(String.format("%s %d", message, (i + 1)));
         }
+        return "OK";
+    }
+
+    @GetMapping("/send-body")
+    public String sendMessage(@RequestBody Map<String, Object> message) {
+        jmsSending.send(message);
         return "OK";
     }
 
