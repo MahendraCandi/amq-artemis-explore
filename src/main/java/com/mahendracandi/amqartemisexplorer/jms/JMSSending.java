@@ -21,6 +21,10 @@ public class JMSSending {
     private JmsTemplate topicJmsTemplate;
 
     @Autowired
+    @Qualifier("amq5JmsTemplate")
+    private JmsTemplate amq5JmsTemplate;
+
+    @Autowired
     private ObjectMapper objectMapper;
 
     @Value("${queue.sending.name}")
@@ -28,6 +32,12 @@ public class JMSSending {
 
     @Value("${topic.sending.name}")
     private String topicName;
+
+    @Value("${queue.amq5.sending.name}")
+    private String queueNameAmq5;
+
+    public static final String PROPERTIES_NAME = "properties_name";
+    public static final String PROPERTIES_VALUE = "properties_value";
 
     public void send(String parameter) {
         System.out.println("Sending to queue: " + parameter);
@@ -47,5 +57,20 @@ public class JMSSending {
     public void sendToTopic(String parameter) {
         System.out.println("Sending to topic: " + parameter);
         topicJmsTemplate.convertAndSend(topicName, parameter);
+    }
+
+    public void sendToQueueAmq5(Map<String, Object> parameter) {
+        try {
+            String json = objectMapper.writeValueAsString(parameter);
+            System.out.println("Sending to queue AMQ5: " + json);
+
+            amq5JmsTemplate.convertAndSend(queueNameAmq5, json, message -> {
+                // additional message properties
+                message.setStringProperty(PROPERTIES_NAME, PROPERTIES_VALUE);
+                return message;
+            });
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
     }
 }

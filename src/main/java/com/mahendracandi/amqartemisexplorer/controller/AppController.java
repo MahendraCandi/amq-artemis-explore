@@ -1,5 +1,6 @@
 package com.mahendracandi.amqartemisexplorer.controller;
 
+import com.mahendracandi.amqartemisexplorer.jms.AMQ5Service;
 import com.mahendracandi.amqartemisexplorer.jms.JMSSending;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,9 @@ public class AppController {
     @Autowired
     JMSSending jmsSending;
 
+//    @Autowired
+//    AMQ5Service amq5Service;
+
     @GetMapping("/send")
     public String sendMessage(
             @RequestParam("message") String message,
@@ -28,6 +32,12 @@ public class AppController {
     @GetMapping("/send-body")
     public String sendMessage(@RequestBody Map<String, Object> message) {
         jmsSending.send(message);
+        return "OK";
+    }
+
+    @GetMapping("/send-body-amq5")
+    public String sendMessageToAMQ5(@RequestBody Map<String, Object> message) {
+        jmsSending.sendToQueueAmq5(message);
         return "OK";
     }
 
